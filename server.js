@@ -157,7 +157,7 @@ app.post('/api/image', async (req, res) => {
 const distPath = join(__dirname, 'dist')
 if (existsSync(distPath)) {
   app.use(express.static(distPath))
-  app.get('*', (req, res) => res.sendFile(join(distPath, 'index.html')))
+  app.use((req, res) => res.sendFile(join(distPath, 'index.html')))
 }
 
 const PORT = process.env.PORT || 3001
