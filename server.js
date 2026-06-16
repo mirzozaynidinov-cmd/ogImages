@@ -6,6 +6,7 @@ import { URL } from 'url'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
+import { existsSync } from 'fs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -152,10 +153,11 @@ app.post('/api/image', async (req, res) => {
   }
 })
 
-// в продакшене раздаём собранный Vite
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(join(__dirname, 'dist')))
-  app.get('*', (req, res) => res.sendFile(join(__dirname, 'dist', 'index.html')))
+// раздаём собранный Vite если dist существует
+const distPath = join(__dirname, 'dist')
+if (existsSync(distPath)) {
+  app.use(express.static(distPath))
+  app.get('*', (req, res) => res.sendFile(join(distPath, 'index.html')))
 }
 
 const PORT = process.env.PORT || 3001
